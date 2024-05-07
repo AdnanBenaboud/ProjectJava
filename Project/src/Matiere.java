@@ -5,6 +5,8 @@ public class Matiere {
     protected int Coefficient;
     protected String description;
     Note note;
+    private JBDConnector DB = new JBDConnector();
+	private String tableName = "matiere";
     
     public Matiere(int IDMatiere,String NomMatiere,float VolumeHorraire,int Coefficient,String description,Note note){
         this.IDMatiere=IDMatiere;
@@ -16,17 +18,6 @@ public class Matiere {
     };
 
 
-    protected void AjoutMatiere(){
-        
-    };
-    protected void SupprimerMatiere(){
-
-    };
-    protected void ModifierMatiere(){
-
-    };
-    protected void ListeMatieres(){
-
-    };
+    
 
 }

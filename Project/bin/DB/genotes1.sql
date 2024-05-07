@@ -139,7 +139,7 @@ CREATE TABLE `note` (
 --
 
 INSERT INTO `note` (`id_etudiant`, `id_matiere`, `note_finale`) VALUES
-(1, 'GI111', 17),
+(1, 'GI111', 16),
 (1, 'GI121', 12),
 (1, 'GI131', 13),
 (2, 'GI111', 16.25),

@@ -17,6 +17,7 @@ public class MenuWindow extends JFrame {
 	     btnNewButton_1.setBounds(104, 60, 200, 115);
 	     btnNewButton_1.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent e) {
+				new EtudiantGUI();
 	     	}
 	     });
 	     getContentPane().setLayout(null);
@@ -26,6 +27,11 @@ public class MenuWindow extends JFrame {
 	     
 	     JButton btnNewButton_2 = new JButton("Filière");
 	     btnNewButton_2.setBounds(372, 61, 200, 112);
+		 btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new FiliereGUI();
+			}
+		});
 	     
 	     btnNewButton_2.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton_2);
@@ -35,6 +41,12 @@ public class MenuWindow extends JFrame {
 	     
 	     btnNewButton.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton);
+
+		 btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ModulesWindow();
+			}
+		});
 	     
 	     JButton btnNewButton_3 = new JButton("Matières");
 	     btnNewButton_3.setBounds(372, 234, 200, 115);
