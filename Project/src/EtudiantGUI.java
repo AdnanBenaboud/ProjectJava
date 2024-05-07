@@ -191,7 +191,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         ajouterBtn.setBounds(187, 277, 92, 35);
         ajouterContent.add(ajouterBtn);
         choixNiveaux.setModel(new DefaultComboBoxModel(
-        		DB.getOneColumnWithConditions(
+        DB.getOneColumnWithConditions(
             			"semestre",
             			"id_semestre",
             			new String[] {"id_filiere"}, 

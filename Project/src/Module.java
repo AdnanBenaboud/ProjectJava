@@ -17,7 +17,6 @@ public class Module {
         this.NiveauModule=NiveauModule;
         this.DescriptionModule=DescriptionModule;
         this.filiere = filiere;
-        this.matiere=new ArrayList<>();
     };
 
     // Ajouter a notre base de donnees
@@ -26,8 +25,10 @@ public class Module {
 				new String[] {
 						this.IDModule,
 						this.NomModule,
-						this.DescriptionModule,
-                        this.filiere.id
+                        this.NiveauModule,
+                        this.DescriptionModule,
+                        this.filiere.id,
+						
 				});
 	}
 
@@ -45,7 +46,6 @@ public class Module {
             this.NiveauModule = newRow[2];
             this.DescriptionModule = newRow[3];
             this.filiere.id = newRow[4];
-
     }
 
     public void supprimer(){
