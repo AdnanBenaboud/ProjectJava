@@ -1,5 +1,4 @@
 
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -22,7 +21,7 @@ public class JBDConnector {
 	private String[] filiere = { "id_filiere", "nom_filiere", "objectif_filiere" };
 	private String[] matiere = { "id_matiere", "nom_matiere", "description_matiere", "volume_horaire_matiere",
 			"coefficient_matiere", "id_module" };
-	private String[] module = { "id_module", "nom_module", "description_module", "id_semestre" };
+	private String[] module = { "id_module", "nom_module", "description_module", "id_semestre", "id_filiere" };
 	private String[] semestre = { "id_semestre", "nom_semestre", "id_filiere", "annee_semestre" };
 	private String[] note = { "id_etudiant", "id_matiere", "note_finale" };
 
@@ -50,7 +49,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 
 				try (Statement statem = con.createStatement()) {
@@ -58,7 +57,7 @@ public class JBDConnector {
 					// Execution to get a ResultSet
 					ResultSet result = statem.executeQuery(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 					// Extract results from ResultSet
 					return extractResults(result, TableName);
 				}
@@ -136,7 +135,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			// Make new connection
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 
@@ -173,7 +172,7 @@ public class JBDConnector {
 
 					statem.executeUpdate(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 
 				} catch (SQLIntegrityConstraintViolationException e) {
 					System.out.println("**Update invalide**");
@@ -210,7 +209,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			// Make new connection
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 				String columnNames = "";
@@ -251,7 +250,7 @@ public class JBDConnector {
 
 					statem.executeUpdate(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 
 				}
 			}
@@ -279,7 +278,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			// Make new connection
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 
@@ -302,7 +301,7 @@ public class JBDConnector {
 
 					statem.executeUpdate(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 
 				} catch (SQLIntegrityConstraintViolationException e) {
 					System.out.println("**Update invalide**");
@@ -338,7 +337,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 
 				try (Statement statem = con.createStatement()) {
@@ -346,7 +345,7 @@ public class JBDConnector {
 
 					ResultSet result = statem.executeQuery(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 
 					ArrayList<String> values = new ArrayList<String>();
 					while (result.next()) {
@@ -391,7 +390,7 @@ public class JBDConnector {
 			String login = props.getProperty("jdbc.login");
 			String password = props.getProperty("jdbc.password");
 
-//			System.out.println("Database connection...");
+			// System.out.println("Database connection...");
 			try (Connection con = DriverManager.getConnection(url, login, password)) {
 
 				try (Statement statem = con.createStatement()) {
@@ -399,7 +398,7 @@ public class JBDConnector {
 
 					ResultSet result = statem.executeQuery(script);
 
-//					System.out.println("Excecution done.");
+					// System.out.println("Excecution done.");
 
 					return extractResults(result, TableName, columns);
 
@@ -452,63 +451,65 @@ public class JBDConnector {
 
 	}
 
-	// to get only one column of a table with certain conditions that will be provided
+	// to get only one column of a table with certain conditions that will be
+	// provided
 	// example of condtions : id=10 and name="cristiano"
-	//	==> it should be provided to this function as
-	//(name of the table, column we want, {id, name}, {10, "cristiano"}	
-		public String[] getOneColumnWithConditions(String TableName, String columnPrincipale, String[] columns, String[] values) {
-			Properties props = new Properties();
+	// ==> it should be provided to this function as
+	// (name of the table, column we want, {id, name}, {10, "cristiano"}
+	public String[] getOneColumnWithConditions(String TableName, String columnPrincipale, String[] columns,
+			String[] values) {
+		Properties props = new Properties();
 
-			try (FileInputStream fis = new FileInputStream("conf.properties")) {
-				props.load(fis);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String script = "SELECT ";
-			script += columnPrincipale;
-			script += String.format(" FROM %s", TableName);
-			script += String.format(" WHERE `%s` = '%s'", columns[0], values[0]);
-			
-//			add conditions to the script
-			for (int i = 1; i < columns.length; i++) {
-					script += String.format("AND `%s` = '%s'", columns[i], values[i]);
-				}
-			script+=";";
-			
-			try {
-				Class.forName(props.getProperty("jdbc.driver.class"));
-				String url = props.getProperty("jdbc.url");
-				String login = props.getProperty("jdbc.login");
-				String password = props.getProperty("jdbc.password");
-
-//				System.out.println("Database connection...");
-				try (Connection con = DriverManager.getConnection(url, login, password)) {
-
-					try (Statement statem = con.createStatement()) {
-						System.out.println("Excecuting: " + script);
-//						execute
-						ResultSet result = statem.executeQuery(script);
-
-//						System.out.println("Excecution done.");
-
-//						extract results
-						ArrayList<String> extractedValues = new ArrayList<String>();
-						while (result.next()) {
-							extractedValues.add(result.getObject(columnPrincipale).toString());
-						}
-//						return them in the form of String[]
-						return OneDArrayToList(extractedValues);
-
-					}
-				}
-
-			} catch (ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
-			}
-
-			return null;
+		try (FileInputStream fis = new FileInputStream("conf.properties")) {
+			props.load(fis);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		String script = "SELECT ";
+		script += columnPrincipale;
+		script += String.format(" FROM %s", TableName);
+		script += String.format(" WHERE `%s` = '%s'", columns[0], values[0]);
+
+		// add conditions to the script
+		for (int i = 1; i < columns.length; i++) {
+			script += String.format("AND `%s` = '%s'", columns[i], values[i]);
+		}
+		script += ";";
+
+		try {
+			Class.forName(props.getProperty("jdbc.driver.class"));
+			String url = props.getProperty("jdbc.url");
+			String login = props.getProperty("jdbc.login");
+			String password = props.getProperty("jdbc.password");
+
+			// System.out.println("Database connection...");
+			try (Connection con = DriverManager.getConnection(url, login, password)) {
+
+				try (Statement statem = con.createStatement()) {
+					System.out.println("Excecuting: " + script);
+					// execute
+					ResultSet result = statem.executeQuery(script);
+
+					// System.out.println("Excecution done.");
+
+					// extract results
+					ArrayList<String> extractedValues = new ArrayList<String>();
+					while (result.next()) {
+						extractedValues.add(result.getObject(columnPrincipale).toString());
+					}
+					// return them in the form of String[]
+					return OneDArrayToList(extractedValues);
+
+				}
+			}
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 
 	// change ArrayList<String> to String[]
 	public String[] OneDArrayToList(ArrayList<String> arrayList) {
