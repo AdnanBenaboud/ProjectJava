@@ -4,6 +4,8 @@ public class Filiere {
 	protected String id;
 	protected String nom;
 	protected String objectif;
+	protected Filiere filiere;
+
 	private String tableName = "filiere";
 	private JBDConnector DB = new JBDConnector();
 	

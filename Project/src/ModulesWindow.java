@@ -129,7 +129,7 @@ public class ModulesWindow implements ActionListener, TableModelListener {
         contenu.setBounds(129, 0, 457, 600);
         contenu.setBackground(new Color(0, 206, 209));
         afficherContent.setBackground(new Color(0, 206, 209));
-        afficherContent.setBounds(129, 0, 457, 600);
+        afficherContent.setBounds(129, 0, 700, 600);
         afficherContent.setLayout(new BorderLayout(0, 0));
 
         // Créer la table avec les donees des etudiants
@@ -171,11 +171,11 @@ public class ModulesWindow implements ActionListener, TableModelListener {
 
         ajouterContent.add(nom);
 
-        JLabel Objectif = new JLabel("Objectif");
+        JLabel Objectif = new JLabel("Description");
         Objectif.setVerticalAlignment(SwingConstants.TOP);
         Objectif.setHorizontalAlignment(SwingConstants.LEFT);
         Objectif.setFont(new Font("Gabriola", Font.PLAIN, 20));
-        Objectif.setBounds(116, 146, 86, 27);
+        Objectif.setBounds(116, 250, 86, 27);
         ajouterContent.add(Objectif);
 
         JButton ajouterBtn = new JButton("Ajouter");
@@ -184,9 +184,9 @@ public class ModulesWindow implements ActionListener, TableModelListener {
         ajouterBtn.setBackground(new Color(255, 255, 255));
 
         objectifPan = new JTextPane();
-        objectifPan.setBounds(116, 172, 240, 75);
+        objectifPan.setBounds(116, 280, 240, 75);
         ajouterContent.add(objectifPan);
-        ajouterBtn.setBounds(187, 277, 92, 35);
+        ajouterBtn.setBounds(187, 410, 92, 35);
         ajouterContent.add(ajouterBtn);
 
         nomField = new JTextField();
@@ -212,7 +212,7 @@ public class ModulesWindow implements ActionListener, TableModelListener {
         getListFilieres();
 
         f.setVisible(true);
-        f.setResizable(false);
+        f.setResizable(true);
     }
 
     public static void main(String[] args) {
