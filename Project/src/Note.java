@@ -1,3 +1,5 @@
+import java.sql.SQLIntegrityConstraintViolationException;
+
 public class Note {
     protected float note;
     protected String id_etudiant;
@@ -14,18 +16,29 @@ public class Note {
     }
 
     // Ajouter a notre base de donnees
-    public void Ajouter() {
-        DB.add(this.tableName,
-                new String[] {
-                        this.id_etudiant,
-                        this.id_matiere,
-                        Float.toString(this.note)
-                });
+    public void Ajouter() throws Exception {
+        try {
+            DB.add(this.tableName,
+                    new String[] {
+                            this.id_etudiant,
+                            this.id_matiere,
+                            Float.toString(this.note)
+                    });
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            throw new SQLIntegrityConstraintViolationException();
+        }
 
     }
 
     // Modifier dans la base de donnees
     public void Modifier(String[] newRow) {
+
+        // Si l'utilisateur a modifier uen colonne autre que la colonne des notes.
+        if (Float.parseFloat(newRow[6]) == note) {
+            return;
+        }
         try {
             DB.OneDArrayWithScript("0",
                     String.format(
@@ -44,6 +57,7 @@ public class Note {
     }
 
     public void Supprimer() {
-
+        DB.delete(this.tableName, new String[] { "id_etudiant", "id_matiere" },
+                new String[] { this.id_etudiant, this.id_matiere });
     }
 }

@@ -28,8 +28,8 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     JLabel titre;
     JButton afficher;
     JButton ajouter;
-    
-//    pour connecter a notre base de donnees
+
+    // pour connecter a notre base de donnees
     private JBDConnector DB = new JBDConnector();
 
     JPanel contenu;
@@ -43,11 +43,13 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     private final JLabel Prenom;
     private JTextField prenomField;
     private final JComboBox choixNiveaux;
-    private final JButton supprimer_1;
     private JComboBox choixFiliere;
 
-//    Liste des etudiants
+    // Liste des etudiants
     private ArrayList<Etudiant> Etudiants;
+    private JPanel panel;
+    private JButton supprimer;
+    private JButton voire;
 
     public EtudiantGUI() {
         try {
@@ -79,8 +81,6 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         Prenom = new JLabel("Prénom");
         Prenom.setVerticalAlignment(SwingConstants.TOP);
         choixNiveaux = new JComboBox();
-        supprimer_1 = new JButton("Supprimer");
-        supprimer_1.setVerticalAlignment(SwingConstants.TOP);
         choixFiliere = new JComboBox();
 
         nomField.setBounds(116, 48, 240, 27);
@@ -88,7 +88,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         nomField.setFont(new Font("Tahoma", Font.PLAIN, 14));
         nomField.setColumns(35);
         f.setTitle("Étudiants");
-        f.setBounds(300,150, 600, 400);
+        f.setBounds(300, 150, 600, 400);
         f.getContentPane().setLayout(null);
 
         choix.setBounds(0, 0, 128, 363);
@@ -120,10 +120,10 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         afficherContent.setBackground(new Color(0, 206, 209));
         afficherContent.setBounds(129, 0, 457, 363);
         afficherContent.setLayout(new BorderLayout(0, 0));
-        
-//      Créez la table avec les données des étudiants
+
+        // Créez la table avec les données des étudiants
         afficherTable();
-        
+
         table.setShowHorizontalLines(false);
         table.setFillsViewportHeight(true);
 
@@ -131,20 +131,30 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
 
         afficherContent.add(tableScrollPane);
 
-        supprimer_1.setForeground(new Color(0, 0, 0));
-        supprimer_1.setFont(new Font("Gabriola", Font.PLAIN, 20));
-        supprimer_1.setBackground(new Color(240, 255, 240));
-        supprimer_1.addActionListener(this);
-        supprimer_1.addActionListener(this::supprimerEtudiant);
+        panel = new JPanel();
+        afficherContent.add(panel, BorderLayout.SOUTH);
 
-        afficherContent.add(supprimer_1, BorderLayout.SOUTH);
+        supprimer = new JButton("Supprimer");
+        supprimer.setVerticalAlignment(SwingConstants.TOP);
+        supprimer.setForeground(Color.BLACK);
+        supprimer.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        supprimer.setBackground(new Color(240, 255, 240));
+        panel.add(supprimer);
 
-//         f.getContentPane().add(afficherContent);
+        voire = new JButton("Voire");
+        voire.setVerticalAlignment(SwingConstants.TOP);
+        voire.setForeground(Color.BLACK);
+        voire.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        voire.setBackground(new Color(240, 255, 240));
+        panel.add(voire);
+        voire.addActionListener(this::voireEtudiant);
+
+        f.getContentPane().add(afficherContent);
 
         ajouterContent.setBackground(new Color(0, 206, 209));
         ajouterContent.setBounds(128, 0, 458, 363);
 
-        f.getContentPane().add(ajouterContent);
+        // f.getContentPane().add(ajouterContent);
 
         ajouterContent.setLayout(null);
         Nom.setBounds(116, 26, 35, 27);
@@ -182,7 +192,6 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         choixFiliere.addActionListener(this);
         choixFiliere.addActionListener(this::getSemestreCorrespondants);
         ajouterContent.add(choixFiliere);
-        
 
         JButton ajouterBtn = new JButton("Ajouter");
         ajouterBtn.setVerticalAlignment(SwingConstants.TOP);
@@ -191,12 +200,11 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         ajouterBtn.setBounds(187, 277, 92, 35);
         ajouterContent.add(ajouterBtn);
         choixNiveaux.setModel(new DefaultComboBoxModel(
-        DB.getOneColumnWithConditions(
-            			"semestre",
-            			"id_semestre",
-            			new String[] {"id_filiere"}, 
-            			new String[] {choixFiliere.getSelectedItem().toString()})
-                ));
+                DB.getOneColumnWithConditions(
+                        "semestre",
+                        "id_semestre",
+                        new String[] { "id_filiere" },
+                        new String[] { choixFiliere.getSelectedItem().toString() })));
         choixNiveaux.setBounds(116, 228, 240, 27);
 
         ajouterContent.add(choixNiveaux);
@@ -210,9 +218,9 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
 
         // Action listeners pour gerer l'appui des buttons
         afficher.addActionListener(this);
-        
-//      Ici, "afficherPanel" est la fonction qui sera execute si la button
-//       "afficher" est pressé
+
+        // Ici, "afficherPanel" est la fonction qui sera execute si la button
+        // "afficher" est pressé
         afficher.addActionListener(this::afficherPanel);
 
         ajouter.addActionListener(this);
@@ -221,7 +229,9 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         ajouterBtn.addActionListener(this);
         ajouterBtn.addActionListener(this::ajouterEtudiant);
 
-//      Ajouter les etudiants a la liste des etudiants "Etudiants"
+        supprimer.addActionListener(this::supprimerEtudiant);
+
+        // Ajouter les etudiants a la liste des etudiants "Etudiants"
         getListEtudiant();
 
         f.setVisible(true);
@@ -232,20 +242,20 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         new EtudiantGUI();
     }
 
-//    Si il y a une changement dans la table
+    // Si il y a une changement dans la table
     @Override
     public void tableChanged(TableModelEvent e) {
         // TODO Auto-generated method stub
-    	
-//    	l'indice de la table qui à changé
+
+        // l'indice de la table qui à changé
         int rowIndex = e.getFirstRow();
 
-//        la ligne qui à changé
+        // la ligne qui à changé
         String[] newRow = getRow(rowIndex);
-        
-//      on modifie l'objet de l'étudiant 
+
+        // on modifie l'objet de l'étudiant
         Etudiants.get(rowIndex).Modifier(newRow);
-//      mise à jour de la table
+        // mise à jour de la table
         updateTable();
 
     }
@@ -262,9 +272,9 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public void updateTable() {
-//    	D'abord on supprime la table; On crée une nouveau table mise à jour
-//    	et on l'ajoute à notre frame
-    	
+        // D'abord on supprime la table; On crée une nouveau table mise à jour
+        // et on l'ajoute à notre frame
+
         f.remove(afficherContent);
         afficherContent.remove(tableScrollPane);
         tableScrollPane.remove(table);
@@ -290,9 +300,9 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public String[] getRow(int rowIndex) {
-//    	Une fonction qui nous permet d'obtenir la ligne dans une table 
-//    	à partir des l'indice de cette ligne.
-    	
+        // Une fonction qui nous permet d'obtenir la ligne dans une table
+        // à partir des l'indice de cette ligne.
+
         String[] row = new String[table.getColumnCount()];
         for (int k = 0; k < table.getColumnCount(); k++) {
             row[k] = (String) table.getModel().getValueAt(rowIndex, k);
@@ -308,7 +318,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public void getListEtudiant() {
-    	// get La liste des etudiants à partir de la BDD
+        // get La liste des etudiants à partir de la BDD
         Etudiants = new ArrayList<Etudiant>();
         String[][] listDesEtudiants = DB.read(tableName);
         for (int i = 0; i < listDesEtudiants.length; i++) {
@@ -322,12 +332,10 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         }
 
     }
-    
-    
 
     // Afficher Panel pour Liste des etudiants
     public void afficherPanel(ActionEvent e) {
-//    	On change les panels ici; 
+        // On change les panels ici;
         afficher.setBackground(new Color(60, 179, 113));
         ajouter.setBackground(new Color(211, 211, 211));
 
@@ -343,8 +351,8 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public void afficherPanel() {
-//    	Une autre version de la méme fonction qui peut étre utilisée indépendament
-//    	de l'ActionListener
+        // Une autre version de la méme fonction qui peut étre utilisée indépendament
+        // de l'ActionListener
         afficher.setBackground(new Color(60, 179, 113));
         ajouter.setBackground(new Color(211, 211, 211));
 
@@ -361,7 +369,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
 
     // Afficher Panel pour ajouter
     public void ajouterPanel(ActionEvent e) {
-//    	Changer les panels(afficher la panel qui permet d'ajouter une étudiant)
+        // Changer les panels(afficher la panel qui permet d'ajouter une étudiant)
         ajouter.setBackground(new Color(60, 179, 113));
         afficher.setBackground(new Color(211, 211, 211));
         f.getContentPane().remove(afficherContent);
@@ -376,8 +384,8 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public void ajouterEtudiant(ActionEvent e) {
-    	
-//      Gérer les erreures 
+
+        // Gérer les erreures
         if (nomField.getText().trim().isEmpty()) {
             showError("Nom vide ! ");
             return;
@@ -386,21 +394,21 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
             return;
 
         }
-//       Si il n'y a pas une des semestres/Niveaux disponible pour cette filiere
-        else if (choixNiveaux.getSelectedItem()==null) {
+        // Si il n'y a pas une des semestres/Niveaux disponible pour cette filiere
+        else if (choixNiveaux.getSelectedItem() == null) {
             showError("Niveau ou Semestre invalide ! ");
             return;
 
         }
-        
+
         Etudiant etudiant = new Etudiant(
                 null,
                 nomField.getText(),
                 prenomField.getText(),
                 choixNiveaux.getSelectedItem().toString(),
                 new Filiere(choixFiliere.getSelectedItem().toString(), null, null));
-        
-//      Ajouter l'étudiant crée à la BDD
+
+        // Ajouter l'étudiant crée à la BDD
         etudiant.Ajouter();
         Etudiants.add(etudiant);
         getListEtudiant();
@@ -414,39 +422,51 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
     }
 
     public void supprimerEtudiant(ActionEvent e) {
-//      Gérer les erreures 
+        // Gérer les erreures
         if (table.getSelectedRowCount() == 0) {
             showError("Veuillez choisir un étudiant d'abord.");
             return;
         }
-        
-        int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet étudiant?"), "Supprimer un étudiant",
-        	      JOptionPane.CANCEL_OPTION);
-      if(res == 0) {
-    	  int selectedRowIndex = table.getSelectedRow();
-//        Supprimer l'étudiant crée de la BDD
-          Etudiants.get(selectedRowIndex).Supprimer();
-          getListEtudiant();
-          updateTable();
-      }
-      else {
-    	  updateTable();
-         return;
-      }
-      
-        	      
-        
+
+        int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet étudiant?"),
+                "Supprimer un étudiant",
+                JOptionPane.CANCEL_OPTION);
+        if (res == 0) {
+            int selectedRowIndex = table.getSelectedRow();
+            // Supprimer l'étudiant crée de la BDD
+            Etudiants.get(selectedRowIndex).Supprimer();
+            getListEtudiant();
+            updateTable();
+        } else {
+            updateTable();
+            return;
+        }
+
     }
+
+    public void voireEtudiant(ActionEvent e) {
+        // Gérer les erreures
+        if (table.getSelectedRowCount() == 0) {
+            showError("Veuillez choisir un étudiant d'abord.");
+            return;
+        }
+        int selectedRowIndex = table.getSelectedRow();
+        // Supprimer l'étudiant crée de la BDD
+        Etudiant etudiant = Etudiants.get(selectedRowIndex);
+        new EtudiantInfo(etudiant.filiere.id, etudiant.niveau, etudiant.id);
+
+    }
+
     public void getSemestreCorrespondants(ActionEvent e) {
-    	
-    	String[] listeDesNiveaux = DB.getOneColumnWithConditions(
-    			"semestre",
-    			"id_semestre",
-    			new String[] {"id_filiere"}, 
-    			new String[] {choixFiliere.getSelectedItem().toString()});
-    	
-//    	Mise a jour des choix des semestres/Niveaux
-    	choixNiveaux.setModel(new DefaultComboBoxModel(
-    			listeDesNiveaux));
+
+        String[] listeDesNiveaux = DB.getOneColumnWithConditions(
+                "semestre",
+                "id_semestre",
+                new String[] { "id_filiere" },
+                new String[] { choixFiliere.getSelectedItem().toString() });
+
+        // Mise a jour des choix des semestres/Niveaux
+        choixNiveaux.setModel(new DefaultComboBoxModel(
+                listeDesNiveaux));
     }
 }

@@ -25,7 +25,7 @@ public class JBDConnector {
 	private String[] semestre = { "id_semestre", "nom_semestre", "id_filiere", "annee_semestre" };
 	private String[] notes = { "id_etudiant", "id_matiere", "nom_etudiant", "prenom_etudiant", "nom_matiere",
 			"coefficient_matiere", "note_finale" };
-	private String[] note = { "id_etudiant, id_matiere, note_finale" };
+	private String[] note = { "id_etudiant", "id_matiere", "note_finale" };
 
 	public JBDConnector() {
 
@@ -258,7 +258,7 @@ public class JBDConnector {
 			}
 
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.toString());
 		}
 	}
 
