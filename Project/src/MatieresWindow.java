@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -41,6 +43,8 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     private final JTextField coefficientField;
     private final JLabel descriptionLabel;
     private final JTextPane descriptionPane;
+    private final JButton supprimer_2;
+
 
     // Liste des matières
     private ArrayList<Matiere> Matieres;
@@ -73,6 +77,8 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         descriptionLabel = new JLabel("Description");
         descriptionPane = new JTextPane();
 
+        supprimer_2 = new JButton("Supprimer");
+        supprimer_2.setVerticalAlignment(SwingConstants.TOP);
         frame.setTitle("Gestion des Matières");
         frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,6 +110,8 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         afficherContent.setBackground(new Color(0, 206, 209));
         afficherContent.setBounds(129, 0, 457, 363);
         afficherContent.setLayout(null);
+        
+       
 
         // Créer la table avec les données des matières
         afficherTable();
@@ -114,6 +122,12 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         tableScrollPane = new JScrollPane(table);
         tableScrollPane.setBounds(10, 10, 437, 300);
         afficherContent.add(tableScrollPane);
+        
+        supprimer_2.setForeground(new Color(0, 0, 0));
+        supprimer_2.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        supprimer_2.setBackground(new Color(240, 255, 240));
+
+        afficherContent.add(supprimer_2, BorderLayout.SOUTH);
 
         frame.getContentPane().add(afficherContent);
 
@@ -226,6 +240,10 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         frame.repaint();
         frame.revalidate();
     }
+    
+    
+    
+
 
     public void ajouterMatiere(ActionEvent e) {
         // Code pour ajouter une matière
