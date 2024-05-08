@@ -23,7 +23,9 @@ public class JBDConnector {
 			"coefficient_matiere", "id_module" };
 	private String[] module = { "id_module", "nom_module", "description_module", "id_semestre", "id_filiere" };
 	private String[] semestre = { "id_semestre", "nom_semestre", "id_filiere", "annee_semestre" };
-	private String[] note = { "id_etudiant", "id_matiere", "note_finale" };
+	private String[] notes = { "id_etudiant", "id_matiere", "nom_etudiant", "prenom_etudiant", "nom_matiere",
+			"coefficient_matiere", "note_finale" };
+	private String[] note = { "id_etudiant, id_matiere, note_finale" };
 
 	public JBDConnector() {
 
@@ -93,7 +95,7 @@ public class JBDConnector {
 
 	}
 
-	private String[][] extractResults(ResultSet result, String TableName, String[] columns) {
+	private String[][] extractResults(ResultSet result, String[] columns) {
 		// get values only for specific columns
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		try {
@@ -400,7 +402,7 @@ public class JBDConnector {
 
 					// System.out.println("Excecution done.");
 
-					return extractResults(result, TableName, columns);
+					return extractResults(result, columns);
 
 				}
 			}
@@ -426,6 +428,8 @@ public class JBDConnector {
 			columns = module;
 		} else if (TableName == "semestre") {
 			columns = semestre;
+		} else if (TableName == "notes") {
+			columns = notes;
 		}
 		return columns;
 	}
@@ -526,6 +530,92 @@ public class JBDConnector {
 		}
 
 		return stringArray;
+	}
+
+	public String[][] TwoDArrayWithScript(String[] columns, String script) {
+
+		Properties props = new Properties();
+
+		try (FileInputStream fis = new FileInputStream("conf.properties")) {
+			props.load(fis);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Class.forName(props.getProperty("jdbc.driver.class"));
+			String url = props.getProperty("jdbc.url");
+			String login = props.getProperty("jdbc.login");
+			String password = props.getProperty("jdbc.password");
+
+			// System.out.println("Database connection...");
+			try (Connection con = DriverManager.getConnection(url, login, password)) {
+
+				try (Statement statem = con.createStatement()) {
+					System.out.println("Excecuting: " + script);
+
+					ResultSet result = statem.executeQuery(script);
+
+					// System.out.println("Excecution done.");
+
+					return extractResults(result, columns);
+
+				}
+			}
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public String[] OneDArrayWithScript(String column, String script) {
+
+		Properties props = new Properties();
+
+		try (FileInputStream fis = new FileInputStream("conf.properties")) {
+			props.load(fis);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			Class.forName(props.getProperty("jdbc.driver.class"));
+			String url = props.getProperty("jdbc.url");
+			String login = props.getProperty("jdbc.login");
+			String password = props.getProperty("jdbc.password");
+
+			// System.out.println("Database connection...");
+			try (Connection con = DriverManager.getConnection(url, login, password)) {
+
+				try (Statement statem = con.createStatement()) {
+					System.out.println("Excecuting: " + script);
+
+					if (column == "0") {
+						statem.executeUpdate(script);
+					} else {
+						ResultSet result = statem.executeQuery(script);
+						// System.out.println("Excecution done.");
+
+						ArrayList<String> values = new ArrayList<String>();
+						while (result.next()) {
+							values.add(result.getObject(column).toString());
+						}
+
+						return OneDArrayToList(values);
+					}
+
+				}
+			}
+
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }
