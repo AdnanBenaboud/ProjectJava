@@ -43,7 +43,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     private final JTextField coefficientField;
     private final JLabel descriptionLabel;
     private final JTextPane descriptionPane;
-    private final JButton supprimer_2;
+    private final JButton supprimer_1;
 
 
     // Liste des matières
@@ -77,8 +77,8 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         descriptionLabel = new JLabel("Description");
         descriptionPane = new JTextPane();
 
-        supprimer_2 = new JButton("Supprimer");
-        supprimer_2.setVerticalAlignment(SwingConstants.TOP);
+        supprimer_1 = new JButton("Supprimer");
+        supprimer_1.setVerticalAlignment(SwingConstants.TOP);
         frame.setTitle("Gestion des Matières");
         frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -123,11 +123,11 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         tableScrollPane.setBounds(10, 10, 437, 300);
         afficherContent.add(tableScrollPane);
         
-        supprimer_2.setForeground(new Color(0, 0, 0));
-        supprimer_2.setFont(new Font("Gabriola", Font.PLAIN, 20));
-        supprimer_2.setBackground(new Color(240, 255, 240));
+        supprimer_1.setForeground(new Color(0, 0, 0));
+        supprimer_1.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        supprimer_1.setBackground(new Color(240, 255, 240));
 
-        afficherContent.add(supprimer_2, BorderLayout.SOUTH);
+        afficherContent.add(supprimer_1, BorderLayout.SOUTH);
 
         frame.getContentPane().add(afficherContent);
 
