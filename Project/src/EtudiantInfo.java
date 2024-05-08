@@ -96,8 +96,8 @@ public class EtudiantInfo {
 		noteMoyenne = new JLabel("20");
 		noteMoyenne.setBackground(new Color(102, 205, 170));
 		noteMoyenne.setForeground(new Color(0, 0, 139));
-		noteMoyenne.setFont(new Font("Yu Gothic Light", Font.PLAIN, 14));
-		noteMoyenne.setBounds(619, 429, 26, 34);
+		noteMoyenne.setFont(new Font("Yu Gothic Light", Font.PLAIN, 11));
+		noteMoyenne.setBounds(612, 429, 57, 34);
 		g.getContentPane().add(noteMoyenne);
 
 		afficherInformations();
@@ -138,8 +138,13 @@ public class EtudiantInfo {
 				noteM += CeoffMatiere * noteMatiere;
 				sommeCoeff += CeoffMatiere;
 			}
+			// System.out.println(noteM);
+			// System.out.println(sommeCoeff);
+
 			noteM = noteM / sommeCoeff;
-			noteMoyenne.setText(Float.toString(Math.round(noteM * 100) / 100));
+			// System.out.println(String.format("%.2f", noteM));
+
+			noteMoyenne.setText(String.format("%.2f", noteM));
 		} catch (Exception e) {
 			// TODO: handle exception
 			table.setModel(new DefaultTableModel(
