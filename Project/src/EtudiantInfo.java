@@ -129,7 +129,7 @@ public class EtudiantInfo {
 			results = DB.TwoDArrayWithScript(columns, script);
 			table.setModel(new DefaultTableModel(
 					results,
-					columns));
+					new String[] { "Nom de Matiere", "Coefficient de Matiere", "Note" }));
 			float noteM = 0;
 			float sommeCoeff = 0;
 			for (int i = 0; i < results.length; i++) {
