@@ -413,8 +413,8 @@ public class ModulesWindow implements ActionListener, TableModelListener {
         Module module = new Module(
                 nomField.getText(),
                 prenomField.getText(),
-                choixNiveaux.getSelectedItem().toString(),
                 DescriptionPan.getText(),
+                choixNiveaux.getSelectedItem().toString(),
                 new Filiere(choixFiliere.getSelectedItem().toString(), null, null)
                 );
         

@@ -11,7 +11,7 @@ public class Module {
     protected JBDConnector DB = new JBDConnector();
     protected String tableName = "module";
     
-    public Module(String IDModule,String NomModule,String NiveauModule,String DescriptionModule,Filiere filiere){
+    public Module(String IDModule,String NomModule,String DescriptionModule,String NiveauModule,Filiere filiere){
         this.IDModule=IDModule;
         this.NomModule=NomModule;
         this.NiveauModule=NiveauModule;
@@ -25,10 +25,9 @@ public class Module {
 				new String[] {
 						this.IDModule,
 						this.NomModule,
-                        this.NiveauModule,
                         this.DescriptionModule,
-                        this.filiere.id,
-						
+                        this.NiveauModule,
+                        this.filiere.id
 				});
 	}
 
@@ -37,14 +36,14 @@ public class Module {
         new String[] {
                 this.IDModule, 
                 this.NomModule,
-                this.NiveauModule,
                 this.DescriptionModule,
+                this.NiveauModule,
                 this.filiere.id
         });
             this.IDModule = newRow[0] ;
             this.NomModule= newRow[1];
-            this.NiveauModule = newRow[2];
-            this.DescriptionModule = newRow[3];
+            this.DescriptionModule = newRow[2];
+            this.NiveauModule = newRow[3];
             this.filiere.id = newRow[4];
     }
 
