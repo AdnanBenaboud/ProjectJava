@@ -1,5 +1,4 @@
 
-
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.Component;
@@ -141,12 +140,12 @@ public class FiliereGUI implements ActionListener, TableModelListener {
 
         afficherContent.add(supprimer_1, BorderLayout.SOUTH);
 
-//        f.getContentPane().add(afficherContent);
+        // f.getContentPane().add(afficherContent);
 
         ajouterContent.setBackground(new Color(0, 206, 209));
         ajouterContent.setBounds(128, 0, 458, 363);
 
-         f.getContentPane().add(ajouterContent);
+        f.getContentPane().add(ajouterContent);
 
         ajouterContent.setLayout(null);
         id.setBounds(116, 26, 35, 27);
@@ -232,7 +231,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
 
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Objectif" }));
 
         table.getModel().addTableModelListener(this::tableChanged);
     }
@@ -247,7 +246,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
 
         DefaultTableModel model = new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName));
+                new String[] { "ID", "Nom", "Objectif" });
 
         table = new JTable(model);
         table.setFont(new Font("DialogInput", Font.PLAIN, 12));
@@ -306,7 +305,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         f.getContentPane().remove(ajouterContent);
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Objectif" }));
         table.getModel().addTableModelListener(this::tableChanged);
         f.getContentPane().add(afficherContent);
         f.repaint();
@@ -323,7 +322,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         f.getContentPane().remove(ajouterContent);
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Objectif" }));
         table.getModel().addTableModelListener(this::tableChanged);
         f.getContentPane().add(afficherContent);
         f.repaint();
