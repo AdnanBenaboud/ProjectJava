@@ -87,7 +87,6 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         moduleLabel.addActionListener(this);
         ajouterContent.add(moduleLabel);
 
-
         volumeHoraireLabel = new JLabel("Volume Horaire");
 
         volumeHoraireField = new JTextField();
@@ -96,7 +95,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         descriptionLabel = new JLabel("Description");
         descriptionPane = new JTextPane();
         supprimer = new JButton("Supprimer");
-        
+
         // Initialize components
         initializeComponents();
 
@@ -151,12 +150,12 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         supprimer.setFont(new Font("Gabriola", Font.PLAIN, 20));
         supprimer.setBackground(new Color(240, 255, 240));
         afficherContent.add(supprimer, BorderLayout.SOUTH);
-        
+
         // Set ajouter content panel properties
         ajouterContent.setBackground(new Color(0, 206, 209));
         ajouterContent.setBounds(128, 0, 458, 500);
         ajouterContent.setLayout(null);
-        
+
         // Set component properties
         setComponentProperties();
 
@@ -164,7 +163,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         afficher.addActionListener(e -> afficherPanel());
         ajouter.addActionListener(e -> ajouterPanel());
         supprimer.addActionListener(e -> supprimerMatiere());
-        
+
         frame.getContentPane().add(ajouterContent);
     }
 
@@ -204,7 +203,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         ajouterContent.add(descriptionLabel);
         descriptionPane.setBounds(180, 250, 200, 100);
         ajouterContent.add(descriptionPane);
-        
+
         // Set properties for ajouter button
         JButton ajouterBtn = new JButton("Ajouter");
         ajouterBtn.setBounds(180, 370, 100, 30);
@@ -217,7 +216,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
                 DB.read(tableName),
                 DB.getColumnsOfTable(tableName)));
 
-        table.getModel().addTableModelListener(this);
+        table.getModel().addTableModelListener(this::tableChanged);
     }
 
     public void updateTable() {
@@ -230,6 +229,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         table = new JTable(model);
         table.setShowHorizontalLines(false);
         table.setFillsViewportHeight(true);
+        table.getModel().addTableModelListener(this::tableChanged);
 
         tableScrollPane = new JScrollPane(table);
         tableScrollPane.setBounds(10, 10, 437, 300);
@@ -241,6 +241,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
 
     @Override
     public void tableChanged(TableModelEvent e) {
+        System.out.println("hello");
         int rowIndex = e.getFirstRow();
         String[] newRow = getRow(rowIndex);
         Matieres.get(rowIndex).Modifier(newRow);
@@ -294,45 +295,44 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     }
 
     public void ajouterMatiere(ActionEvent e) {
-    	
-        //      Gérer les erreures 
-                if (nomField.getText().trim().isEmpty()) {
-                    showError("Nom vide ! ");
-                    return;
-                } else if (idField.getText().trim().isEmpty()) {
-                    showError("Prenom vide ! ");
-                    return;
-        
-                }
-        //       Si il n'y a pas une des semestres/Niveaux disponible pour cette filiere
-                else if (moduleLabel.getSelectedItem()==null) {
-                    showError("Niveau ou Semestre invalide ! ");
-                    return;
-        
-                }
-                
-                Matiere matiere = new Matiere(
-                        idField.getText(),
-                        nomField.getText(),
-                        descriptionPane.getText(),
-                        volumeHoraireField.getText(),
-                        coefficientField.getText(),
-                        new Module(moduleLabel.getSelectedItem().toString(), null, null,null,null)
-                        );
-                
-        //      Ajouter le module crée à la BDD
-                matiere.Ajouter();
-                Matieres.add(matiere);
-                getListMatieres();
-                updateTable();
-                afficherPanel();
-                nomField.setText("");
-                idField.setText("");
-                moduleLabel.setSelectedItem(0);
-                descriptionLabel.setText("");
-                volumeHoraireLabel.setText("");
-                coefficientLabel.setText("");
-            }
+
+        // Gérer les erreures
+        if (nomField.getText().trim().isEmpty()) {
+            showError("Nom vide ! ");
+            return;
+        } else if (idField.getText().trim().isEmpty()) {
+            showError("Prenom vide ! ");
+            return;
+
+        }
+        // Si il n'y a pas une des semestres/Niveaux disponible pour cette filiere
+        else if (moduleLabel.getSelectedItem() == null) {
+            showError("Niveau ou Semestre invalide ! ");
+            return;
+
+        }
+
+        Matiere matiere = new Matiere(
+                idField.getText(),
+                nomField.getText(),
+                descriptionPane.getText(),
+                volumeHoraireField.getText(),
+                coefficientField.getText(),
+                new Module(moduleLabel.getSelectedItem().toString(), null, null, null, null));
+
+        // Ajouter le module crée à la BDD
+        matiere.Ajouter();
+        Matieres.add(matiere);
+        getListMatieres();
+        updateTable();
+        afficherPanel();
+        nomField.setText("");
+        idField.setText("");
+        moduleLabel.setSelectedItem(0);
+        descriptionLabel.setText("");
+        volumeHoraireLabel.setText("");
+        coefficientLabel.setText("");
+    }
 
     public void showError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -344,22 +344,22 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         for (int i = 0; i < listDesMatieres.length; i++) {
             String[] matiere = listDesMatieres[i];
             Matieres.add(new Matiere(
-              matiere[0],
-              matiere[1],
-              matiere[2],
-              matiere[3],
-              matiere[4],
-              new Module(matiere[5], null, null,null,null)));
+                    matiere[0],
+                    matiere[1],
+                    matiere[2],
+                    matiere[3],
+                    matiere[4],
+                    new Module(matiere[5], null, null, null, null)));
         }
     }
-    
+
     public static void main(String[] args) {
         new MatieresWindow();
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         // Add your implementation here
     }
-    
 
 }
