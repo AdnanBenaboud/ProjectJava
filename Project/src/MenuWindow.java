@@ -5,6 +5,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.Color;
 
 public class MenuWindow extends JFrame {
 	public MenuWindow() {
@@ -14,19 +17,20 @@ public class MenuWindow extends JFrame {
 	     this.setLocationRelativeTo(null);
 	     
 	     JButton btnNewButton_1 = new JButton("Etudiants");
-	     btnNewButton_1.setBounds(104, 60, 200, 115);
+	     btnNewButton_1.setBounds(129, 160, 171, 95);
 	     btnNewButton_1.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent e) {
 				new EtudiantGUI();
 	     	}
 	     });
 	     getContentPane().setLayout(null);
+	     getContentPane().setBackground(new Color(108, 147, 142));
 	     
 	     btnNewButton_1.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton_1);
 	     
 	     JButton btnNewButton_2 = new JButton("Filière");
-	     btnNewButton_2.setBounds(372, 61, 200, 112);
+	     btnNewButton_2.setBounds(262, 303, 165, 95);
 		 btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new FiliereGUI();
@@ -37,7 +41,7 @@ public class MenuWindow extends JFrame {
 	     getContentPane().add(btnNewButton_2);
 	     
 	     JButton btnNewButton = new JButton("Modules");
-	     btnNewButton.setBounds(104, 239, 200, 110);
+	     btnNewButton.setBounds(42, 303, 171, 95);
 	     
 	     btnNewButton.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton);
@@ -49,10 +53,25 @@ public class MenuWindow extends JFrame {
 		});
 	     
 	     JButton btnNewButton_3 = new JButton("Matières");
-	     btnNewButton_3.setBounds(372, 234, 200, 115);
+	     btnNewButton_3.setBounds(484, 303, 165, 95);
 	     
 	     btnNewButton_3.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton_3);
+	     
+	     JButton btnNewButton_1_1 = new JButton("Notes");
+	     btnNewButton_1_1.setPreferredSize(new Dimension(200, 50));
+	     btnNewButton_1_1.setBounds(402, 160, 171, 95);
+	     getContentPane().add(btnNewButton_1_1);
+		 btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			   new NoteGUI();
+			}
+		});
+	     
+	     JLabel lblNewLabel = new JLabel("Système de gestion universitaire");
+	     lblNewLabel.setFont(new Font("Nirmala UI", Font.BOLD, 23));
+	     lblNewLabel.setBounds(159, 47, 370, 40);
+	     getContentPane().add(lblNewLabel);
 	}
 	
 	public static void main(String args[]) throws Exception {
