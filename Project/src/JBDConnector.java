@@ -532,6 +532,7 @@ public class JBDConnector {
 		return stringArray;
 	}
 
+	// Execute a given script and obtain a 2D array of the given columns
 	public String[][] TwoDArrayWithScript(String[] columns, String script) {
 
 		Properties props = new Properties();
@@ -571,6 +572,7 @@ public class JBDConnector {
 		return null;
 	}
 
+	// same as above, only here the script must return one column (1D array)
 	public String[] OneDArrayWithScript(String column, String script) {
 
 		Properties props = new Properties();
@@ -593,6 +595,8 @@ public class JBDConnector {
 
 				try (Statement statem = con.createStatement()) {
 					System.out.println("Excecuting: " + script);
+
+					// in case we want to return nothing
 
 					if (column == "0") {
 						statem.executeUpdate(script);

@@ -52,6 +52,8 @@ public class EtudiantInfo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// notre frame
 		g = new JFrame();
 		g.getContentPane().setBackground(new Color(176, 196, 222));
 		g.getContentPane().setLayout(null);
@@ -60,11 +62,13 @@ public class EtudiantInfo {
 		g.setBounds(350, 200, 700, 500);
 		g.getContentPane().setLayout(null);
 
+		// ou on va mettre le nom de l'etudiant
 		nom = new JLabel("Nom: ");
 		nom.setFont(new Font("Yu Gothic Light", Font.PLAIN, 11));
 		nom.setBounds(10, 50, 158, 14);
 		g.getContentPane().add(nom);
 
+		// ou on va mettre le prenom de l'etudiant
 		prenom = new JLabel("Prenom: ");
 		prenom.setFont(new Font("Yu Gothic Light", Font.PLAIN, 11));
 		prenom.setBounds(10, 75, 195, 14);
@@ -85,6 +89,7 @@ public class EtudiantInfo {
 		noteMoyenneLabel.setBounds(579, 395, 97, 34);
 		g.getContentPane().add(noteMoyenneLabel);
 
+		// la table des notes
 		table = new JTable();
 		table.setForeground(new Color(0, 0, 0));
 		table.setBackground(new Color(176, 196, 222));
@@ -112,9 +117,12 @@ public class EtudiantInfo {
 
 	public void afficherInformations() {
 
+		// le script qui va etre execute
 		String script = String.format(
 				"SELECT nom_matiere, coefficient_matiere, note_finale from matiere, note, module, semestre, filiere where note.id_matiere=matiere.id_matiere and module.id_module=matiere.id_module and module.id_semestre=semestre.id_semestre and filiere.id_filiere=semestre.id_filiere and id_etudiant=%s and filiere.id_filiere='%s'",
 				id_etudiant, id_filiere);
+
+		// les colonnes de resultat
 		String[] columns = { "nom_matiere", "coefficient_matiere", "note_finale" };
 
 		table.setFont(new Font("DialogInput", Font.PLAIN, 16));
@@ -127,11 +135,14 @@ public class EtudiantInfo {
 
 		try {
 			results = DB.TwoDArrayWithScript(columns, script);
+
+			// mise a jour de table
 			table.setModel(new DefaultTableModel(
 					results,
 					new String[] { "Nom de Matiere", "Coefficient de Matiere", "Note" }));
 			float noteM = 0;
 			float sommeCoeff = 0;
+			// calculer la moyenne
 			for (int i = 0; i < results.length; i++) {
 				float noteMatiere = Float.parseFloat(results[i][2]);
 				float CeoffMatiere = Float.parseFloat(results[i][1]);

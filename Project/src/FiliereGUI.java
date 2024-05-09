@@ -122,7 +122,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         afficherContent.setBounds(129, 0, 457, 363);
         afficherContent.setLayout(new BorderLayout(0, 0));
 
-        // Créer la table avec les donees des etudiants
+        // Créer la table avec les donees des filiere
         afficherTable();
 
         table.setShowHorizontalLines(false);
@@ -136,7 +136,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         supprimer_1.setFont(new Font("Gabriola", Font.PLAIN, 20));
         supprimer_1.setBackground(new Color(240, 255, 240));
         supprimer_1.addActionListener(this);
-        supprimer_1.addActionListener(this::supprimerEtudiant);
+        supprimer_1.addActionListener(this::supprimerFiliere);
 
         afficherContent.add(supprimer_1, BorderLayout.SOUTH);
 
@@ -196,7 +196,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         ajouter.addActionListener(this::ajouterPanel);
 
         ajouterBtn.addActionListener(this);
-        ajouterBtn.addActionListener(this::ajouterEtudiant);
+        ajouterBtn.addActionListener(this::ajouterFiliere);
 
         // Ajouter les etudiants a la liste des "Filières"
         getListFilieres();
@@ -218,7 +218,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         int rowIndex = e.getFirstRow();
         // la ligne qui à changé
         String[] newRow = getRow(rowIndex);
-        // on modifie l'objet de l'étudiant
+        // on modifie l'objet de filiere
         Filieres.get(rowIndex).Modifier(newRow);
         // mise à jour de la table
         updateTable();
@@ -332,7 +332,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
 
     // Afficher Panel pour ajouter
     public void ajouterPanel(ActionEvent e) {
-        // Changer les panels(afficher la panel qui permet d'ajouter une étudiant)
+        // Changer les panels(afficher la panel qui permet d'ajouter une filiere)
         ajouter.setBackground(new Color(60, 179, 113));
         afficher.setBackground(new Color(211, 211, 211));
         f.getContentPane().remove(afficherContent);
@@ -346,7 +346,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         JOptionPane.showMessageDialog(f, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public void ajouterEtudiant(ActionEvent e) {
+    public void ajouterFiliere(ActionEvent e) {
         // Gérer les erreures
         if (idField.getText().trim().isEmpty()) {
             showError("Id vide ! ");
@@ -365,7 +365,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
                 nomField.getText(),
                 objectifPan.getText());
         filiere.Ajouter();
-        // Ajouter l'étudiant crée à la BDD
+        // Ajouter la filiere crée à la BDD
         Filieres.add(filiere);
         getListFilieres();
         updateTable();
@@ -375,7 +375,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
         objectifPan.setText("");
     }
 
-    public void supprimerEtudiant(ActionEvent e) {
+    public void supprimerFiliere(ActionEvent e) {
         // Gérer les erreures
         if (table.getSelectedRowCount() == 0) {
             showError("Veuillez choisir un filière d'abord.");
@@ -387,7 +387,7 @@ public class FiliereGUI implements ActionListener, TableModelListener {
                 JOptionPane.CANCEL_OPTION);
         if (res == 0) {
             int selectedRowIndex = table.getSelectedRow();
-            // Supprimer l'étudiant crée de la BDD
+            // Supprimer le filiere crée de la BDD
             Filieres.get(selectedRowIndex).Supprimer();
             getListFilieres();
             updateTable();
