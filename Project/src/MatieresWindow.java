@@ -1,17 +1,11 @@
 import javax.swing.*;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 
 public class MatieresWindow implements ActionListener, TableModelListener {
     private String tableName = "matiere";
@@ -22,7 +16,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     JButton afficher;
     JButton ajouter;
 
-    // Pour connecter à notre base de données
+    // To connect to our database
     private JBDConnector DB = new JBDConnector();
 
     JPanel contenu;
@@ -31,59 +25,80 @@ public class MatieresWindow implements ActionListener, TableModelListener {
 
     private JTable table;
     private JScrollPane tableScrollPane;
-    private final JLabel idLabel;
+    private final JLabel id;
     private final JTextField idField;
-    private final JLabel nomLabel;
+    private final JLabel nom;
     private final JTextField nomField;
-    private final JLabel moduleLabel;
-    private final JTextField moduleField;
+    private final JComboBox moduleLabel;
     private final JLabel volumeHoraireLabel;
     private final JTextField volumeHoraireField;
     private final JLabel coefficientLabel;
     private final JTextField coefficientField;
     private final JLabel descriptionLabel;
     private final JTextPane descriptionPane;
-    private final JButton supprimer_1;
+    private final JButton supprimer;
 
-
-    // Liste des matières
+    // List of matieres
     private ArrayList<Matiere> Matieres;
 
     public MatieresWindow() {
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); // Windows Look and Feel
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         frame = new JFrame();
         choix = new JPanel();
         titre = new JLabel("Matières");
+        titre.setVerticalAlignment(SwingConstants.TOP);
+
         afficher = new JButton("Liste");
+        afficher.setVerticalAlignment(SwingConstants.TOP);
+
         ajouter = new JButton("+");
+        ajouter.setVerticalAlignment(SwingConstants.TOP);
 
         contenu = new JPanel();
         afficherContent = new JPanel();
         ajouterContent = new JPanel();
 
         table = new JTable();
-        
-        
-        
-        idLabel = new JLabel("ID");
+
+        id = new JLabel("ID");
+        id.setVerticalAlignment(SwingConstants.TOP);
+
         idField = new JTextField();
-        nomLabel = new JLabel("Nom");
+        nom = new JLabel("Nom");
+        nom.setVerticalAlignment(SwingConstants.TOP);
+
         nomField = new JTextField();
-        moduleLabel = new JLabel("module");
-        moduleField = new JTextField();
+
+        moduleLabel = new JComboBox();
         volumeHoraireLabel = new JLabel("Volume Horaire");
+
         volumeHoraireField = new JTextField();
         coefficientLabel = new JLabel("Coefficient");
         coefficientField = new JTextField();
         descriptionLabel = new JLabel("Description");
         descriptionPane = new JTextPane();
+        supprimer = new JButton("Supprimer");
+        
+        // Initialize components
+        initializeComponents();
 
-        supprimer_1 = new JButton("Supprimer");
-        supprimer_1.setVerticalAlignment(SwingConstants.TOP);
+        frame.setVisible(true);
+    }
+
+    private void initializeComponents() {
+        // Set frame properties
         frame.setTitle("Gestion des Matières");
         frame.setSize(600, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
+        // Set choice panel properties
         choix.setBounds(0, 0, 128, 500);
         choix.setBackground(new Color(220, 20, 60));
         frame.getContentPane().add(choix);
@@ -105,97 +120,92 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         choix.add(ajouter);
         frame.getContentPane().add(choix);
 
+        // Set content panel properties
         contenu.setBounds(129, 0, 457, 363);
         contenu.setBackground(new Color(0, 206, 209));
         afficherContent.setBackground(new Color(0, 206, 209));
         afficherContent.setBounds(129, 0, 457, 363);
-        afficherContent.setLayout(null);
-        
-       
+        afficherContent.setLayout(new BorderLayout(0, 0));
 
-        // Créer la table avec les données des matières
+        // Initialize table
         afficherTable();
-
         table.setShowHorizontalLines(false);
         table.setFillsViewportHeight(true);
 
         tableScrollPane = new JScrollPane(table);
-        tableScrollPane.setBounds(10, 10, 437, 300);
         afficherContent.add(tableScrollPane);
+
+        supprimer.setForeground(new Color(0, 0, 0));
+        supprimer.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        supprimer.setBackground(new Color(240, 255, 240));
+        afficherContent.add(supprimer, BorderLayout.SOUTH);
         
-        supprimer_1.setForeground(new Color(0, 0, 0));
-        supprimer_1.setFont(new Font("Gabriola", Font.PLAIN, 20));
-        supprimer_1.setBackground(new Color(240, 255, 240));
-
-        afficherContent.add(supprimer_1, BorderLayout.SOUTH);
-
-        frame.getContentPane().add(afficherContent);
-
+        // Set ajouter content panel properties
         ajouterContent.setBackground(new Color(0, 206, 209));
         ajouterContent.setBounds(128, 0, 458, 500);
         ajouterContent.setLayout(null);
         
-        idLabel.setBounds(50, 50, 120, 25);
-        ajouterContent.add(idLabel);
+        // Set component properties
+        setComponentProperties();
+
+        // Add action listeners
+        afficher.addActionListener(e -> afficherPanel());
+        ajouter.addActionListener(e -> ajouterPanel());
+        supprimer.addActionListener(e -> supprimerMatiere());
+        
+        frame.getContentPane().add(ajouterContent);
+    }
+
+    private void setComponentProperties() {
+        // Set properties for ID label and field
+        id.setBounds(50, 50, 120, 25);
+        id.setHorizontalAlignment(SwingConstants.LEFT);
+        id.setFont(new Font("Gabriola", Font.PLAIN, 20));
+        ajouterContent.add(id);
         idField.setBounds(180, 50, 200, 25);
         ajouterContent.add(idField);
 
-        nomLabel.setBounds(50, 90, 120, 25);
-        ajouterContent.add(nomLabel);
-        nomField.setBounds(180, 90, 200, 25); // Adjusted Y-coordinate
+        // Set properties for Nom label and field
+        nom.setBounds(50, 90, 120, 25);
+        ajouterContent.add(nom);
+        nomField.setBounds(180, 90, 200, 25);
         ajouterContent.add(nomField);
 
-        // Positionnement du label "module"
-        moduleLabel.setBounds(50, 130, 120, 25);
+        // Set properties for module label and field
+        moduleLabel.setBounds(180, 130, 200, 25);
         ajouterContent.add(moduleLabel);
-        moduleField.setBounds(180, 130, 200, 25); // Adjusted Y-coordinate
-        ajouterContent.add(moduleField);
 
+        // Set properties for volume horaire label and field
         volumeHoraireLabel.setBounds(50, 170, 120, 25);
         ajouterContent.add(volumeHoraireLabel);
         volumeHoraireField.setBounds(180, 170, 200, 25);
         ajouterContent.add(volumeHoraireField);
 
+        // Set properties for coefficient label and field
         coefficientLabel.setBounds(50, 210, 120, 25);
         ajouterContent.add(coefficientLabel);
-        coefficientField.setBounds(180, 210, 200, 25); // Adjusted Y-coordinate
+        coefficientField.setBounds(180, 210, 200, 25);
         ajouterContent.add(coefficientField);
 
+        // Set properties for description label and pane
         descriptionLabel.setBounds(50, 250, 120, 25);
         ajouterContent.add(descriptionLabel);
-        descriptionPane.setBounds(180, 250, 200, 100); // Adjusted Y-coordinate
+        descriptionPane.setBounds(180, 250, 200, 100);
         ajouterContent.add(descriptionPane);
-
+        
+        // Set properties for ajouter button
         JButton ajouterBtn = new JButton("Ajouter");
-        ajouterBtn.setBounds(180, 370, 100, 30); // Adjusted Y-coordinate
-        ajouterContent.add(ajouterBtn);
-
-
-
-        afficher.addActionListener(this);
-        afficher.addActionListener(e -> afficherPanel());
-        ajouter.addActionListener(this);
-        ajouter.addActionListener(e -> ajouterPanel());
-
+        ajouterBtn.setBounds(180, 370, 100, 30);
         ajouterBtn.addActionListener(this::ajouterMatiere);
-
-        frame.setVisible(true);
+        ajouterContent.add(ajouterBtn);
     }
-
-    public static void main(String[] args) {
-        new MatieresWindow();
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {}
 
     public void afficherTable() {
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
                 DB.getColumnsOfTable(tableName)));
 
-        table.getModel().addTableModelListener(this::tableChanged);
+        table.getModel().addTableModelListener(this);
     }
 
     public void updateTable() {
@@ -219,7 +229,17 @@ public class MatieresWindow implements ActionListener, TableModelListener {
 
     @Override
     public void tableChanged(TableModelEvent e) {
-        // Code pour gérer le changement dans la table
+        int rowIndex = e.getFirstRow();
+        String[] newRow = getRow(rowIndex);
+        Matieres.get(rowIndex).Modifier(newRow);
+    }
+
+    public String[] getRow(int rowIndex) {
+        String[] row = new String[table.getColumnCount()];
+        for (int k = 0; k < table.getColumnCount(); k++) {
+            row[k] = (String) table.getModel().getValueAt(rowIndex, k);
+        }
+        return row;
     }
 
     public void afficherPanel() {
@@ -240,12 +260,61 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         frame.repaint();
         frame.revalidate();
     }
-    
-    
-    
 
+    public void supprimerMatiere() {
+        if (table.getSelectedRowCount() == 0) {
+            showError("Veuillez choisir une matière d'abord.");
+            return;
+        }
+
+        int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet filière?"),
+                "Supprimer une matière",
+                JOptionPane.CANCEL_OPTION);
+        if (res == 0) {
+            int selectedRowIndex = table.getSelectedRow();
+            Matieres.get(selectedRowIndex).Supprimer();
+            getListMatieres();
+            updateTable();
+        } else {
+            updateTable();
+            return;
+        }
+    }
 
     public void ajouterMatiere(ActionEvent e) {
-        // Code pour ajouter une matière
+        String idMatiere = idField.getText();
+        String nomMatiere = nomField.getText();
+        String volumeHoraire = volumeHoraireField.getText();
+        String coefficient = coefficientField.getText();
+        String description = descriptionPane.getText();
+        String idModule = (String) moduleLabel.getSelectedItem();
+
+        Matiere newMatiere = new Matiere(idMatiere, nomMatiere, volumeHoraire, coefficient, description, idModule);
+        newMatiere.Ajouter();
+
+        getListMatieres();
+        updateTable();
     }
+
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void getListMatieres() {
+        Matieres = new ArrayList<Matiere>();
+        String[][] listDesMatieres = DB.read(tableName);
+        for (int i = 0; i < listDesMatieres.length; i++) {
+            String[] matiere = listDesMatieres[i];
+            Matieres.add(new Matiere(matiere[0], matiere[1], matiere[2], matiere[3], matiere[4], matiere[5]));
+        }
+    }
+    
+    public static void main(String[] args) {
+        new MatieresWindow();
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Add your implementation here
+    }
+
 }
