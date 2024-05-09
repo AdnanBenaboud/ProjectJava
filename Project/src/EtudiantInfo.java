@@ -2,9 +2,14 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.BorderLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
+import com.mysql.cj.x.protobuf.MysqlxNotice.Frame;
+
 import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -21,6 +26,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.Window.Type;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.print.*;
 
 public class EtudiantInfo {
 	JFrame g;
@@ -81,7 +90,7 @@ public class EtudiantInfo {
 
 		JLabel titre = new JLabel("Informations de l'Étudiant");
 		titre.setFont(new Font("Yu Gothic Light", Font.PLAIN, 18));
-		titre.setBounds(262, 0, 177, 34);
+		titre.setBounds(262, 0, 200, 34);
 		g.getContentPane().add(titre);
 
 		noteMoyenneLabel = new JLabel("Note moyenne: ");
@@ -106,7 +115,6 @@ public class EtudiantInfo {
 		g.getContentPane().add(noteMoyenne);
 
 		afficherInformations();
-
 		g.setVisible(true);
 		g.setResizable(false);
 	}
