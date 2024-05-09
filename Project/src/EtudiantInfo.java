@@ -56,7 +56,7 @@ public class EtudiantInfo {
 		g.getContentPane().setBackground(new Color(176, 196, 222));
 		g.getContentPane().setLayout(null);
 
-		g.setTitle("Etudiant Information");
+		g.setTitle("Informations de l'Étudiant");
 		g.setBounds(350, 200, 700, 500);
 		g.getContentPane().setLayout(null);
 
@@ -75,7 +75,7 @@ public class EtudiantInfo {
 		id.setBounds(10, 25, 158, 14);
 		g.getContentPane().add(id);
 
-		JLabel titre = new JLabel("Information Etudiant");
+		JLabel titre = new JLabel("Informations de l'Étudiant");
 		titre.setFont(new Font("Yu Gothic Light", Font.PLAIN, 18));
 		titre.setBounds(262, 0, 177, 34);
 		g.getContentPane().add(titre);

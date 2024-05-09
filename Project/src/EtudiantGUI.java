@@ -266,7 +266,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
 
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Prénom", "Semestre", "ID Filière" }));
 
         table.getModel().addTableModelListener(this::tableChanged);
     }
@@ -342,7 +342,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         f.getContentPane().remove(ajouterContent);
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Prénom", "Semestre", "ID Filière" }));
         table.getModel().addTableModelListener(this::tableChanged);
         f.getContentPane().add(afficherContent);
         f.repaint();
@@ -359,7 +359,7 @@ public class EtudiantGUI implements ActionListener, TableModelListener {
         f.getContentPane().remove(ajouterContent);
         table.setModel(new DefaultTableModel(
                 DB.read(tableName),
-                DB.getColumnsOfTable(tableName)));
+                new String[] { "ID", "Nom", "Prénom", "Semestre", "ID Filière" }));
         table.getModel().addTableModelListener(this::tableChanged);
         f.getContentPane().add(afficherContent);
         f.repaint();
