@@ -48,7 +48,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
                 | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-
+        getListMatieres();
         frame = new JFrame();
         choix = new JPanel();
         titre = new JLabel("Matières");
@@ -263,12 +263,12 @@ public class MatieresWindow implements ActionListener, TableModelListener {
 
     public void supprimerMatiere() {
         if (table.getSelectedRowCount() == 0) {
-            showError("Veuillez choisir une matière d'abord.");
+            showError("Veuillez choisir une matiere d'abord.");
             return;
         }
 
         int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet filière?"),
-                "Supprimer une matière",
+                "Supprimer une matiere",
                 JOptionPane.CANCEL_OPTION);
         if (res == 0) {
             int selectedRowIndex = table.getSelectedRow();
