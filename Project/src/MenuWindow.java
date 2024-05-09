@@ -54,7 +54,7 @@ public class MenuWindow extends JFrame {
 	     
 	     JButton btnNewButton_3 = new JButton("Matières");
 	     btnNewButton_3.setBounds(484, 303, 165, 95);
-		 btnNewButton.addActionListener(new ActionListener() {
+		 btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MatieresWindow();
 			}
