@@ -29,6 +29,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     private final JTextField idField;
     private final JLabel nom;
     private final JTextField nomField;
+    private final JLabel module;
     private final JComboBox moduleLabel;
     private final JLabel volumeHoraireLabel;
     private final JTextField volumeHoraireField;
@@ -74,8 +75,19 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         nom.setVerticalAlignment(SwingConstants.TOP);
 
         nomField = new JTextField();
+        module = new JLabel("Module");
+        module.setVerticalAlignment(SwingConstants.TOP);
+        module.setBounds(50, 130, 120, 25);
+        ajouterContent.add(module);
 
         moduleLabel = new JComboBox();
+        moduleLabel.setModel(new DefaultComboBoxModel(
+                DB.getOneColumn("module", "id_module")));
+        moduleLabel.setBounds(116, 170, 240, 27);
+        moduleLabel.addActionListener(this);
+        ajouterContent.add(moduleLabel);
+
+
         volumeHoraireLabel = new JLabel("Volume Horaire");
 
         volumeHoraireField = new JTextField();
@@ -95,7 +107,8 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         // Set frame properties
         frame.setTitle("Gestion des Matières");
         frame.setSize(600, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
         frame.getContentPane().setLayout(null);
 
         // Set choice panel properties
@@ -267,7 +280,7 @@ public class MatieresWindow implements ActionListener, TableModelListener {
             return;
         }
 
-        int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet filière?"),
+        int res = JOptionPane.showConfirmDialog(null, new JLabel("Voulez-vous supprimer cet matière?"),
                 "Supprimer une matiere",
                 JOptionPane.CANCEL_OPTION);
         if (res == 0) {
@@ -282,19 +295,45 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     }
 
     public void ajouterMatiere(ActionEvent e) {
-        String idMatiere = idField.getText();
-        String nomMatiere = nomField.getText();
-        String volumeHoraire = volumeHoraireField.getText();
-        String coefficient = coefficientField.getText();
-        String description = descriptionPane.getText();
-        String idModule = (String) moduleLabel.getSelectedItem();
-
-        Matiere newMatiere = new Matiere(idMatiere, nomMatiere, volumeHoraire, coefficient, description, idModule);
-        newMatiere.Ajouter();
-
-        getListMatieres();
-        updateTable();
-    }
+    	
+        //      Gérer les erreures 
+                if (nomField.getText().trim().isEmpty()) {
+                    showError("Nom vide ! ");
+                    return;
+                } else if (idField.getText().trim().isEmpty()) {
+                    showError("Prenom vide ! ");
+                    return;
+        
+                }
+        //       Si il n'y a pas une des semestres/Niveaux disponible pour cette filiere
+                else if (moduleLabel.getSelectedItem()==null) {
+                    showError("Niveau ou Semestre invalide ! ");
+                    return;
+        
+                }
+                
+                Matiere matiere = new Matiere(
+                        idField.getText(),
+                        nomField.getText(),
+                        descriptionPane.getText(),
+                        volumeHoraireField.getText(),
+                        coefficientField.getText(),
+                        new Module(moduleLabel.getSelectedItem().toString(), null, null,null,null)
+                        );
+                
+        //      Ajouter le module crée à la BDD
+                matiere.Ajouter();
+                Matieres.add(matiere);
+                getListMatieres();
+                updateTable();
+                afficherPanel();
+                nomField.setText("");
+                idField.setText("");
+                moduleLabel.setSelectedItem(0);
+                descriptionLabel.setText("");
+                volumeHoraireLabel.setText("");
+                coefficientLabel.setText("");
+            }
 
     public void showError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -305,7 +344,13 @@ public class MatieresWindow implements ActionListener, TableModelListener {
         String[][] listDesMatieres = DB.read(tableName);
         for (int i = 0; i < listDesMatieres.length; i++) {
             String[] matiere = listDesMatieres[i];
-            Matieres.add(new Matiere(matiere[0], matiere[1], matiere[2], matiere[3], matiere[4], matiere[5]));
+            Matieres.add(new Matiere(
+              matiere[0],
+              matiere[1],
+              matiere[2],
+              matiere[3],
+              matiere[4],
+              new Module(matiere[5], null, null,null,null)));
         }
     }
     
@@ -316,5 +361,6 @@ public class MatieresWindow implements ActionListener, TableModelListener {
     public void actionPerformed(ActionEvent e) {
         // Add your implementation here
     }
+    
 
 }

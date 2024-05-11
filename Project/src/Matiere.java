@@ -7,30 +7,31 @@ public class Matiere {
     protected String VolumeHorraire;
     protected String Coefficient;
     protected String description;
-    protected String IDModule;
+    protected Module Module;
 
     protected Note note;
     private JBDConnector DB = new JBDConnector();
     private String tableName = "matiere";
     
-    public Matiere(String IDMatiere, String NomMatiere, String VolumeHorraire, String Coefficient, String description, String IDModule){
+    public Matiere(String IDMatiere, String NomMatiere, String description, String VolumeHorraire, String Coefficient, Module Module){
         this.IDMatiere = IDMatiere;
         this.NomMatiere = NomMatiere;
         this.VolumeHorraire = VolumeHorraire;
         this.Coefficient = Coefficient;
         this.description = description;
-        this.IDModule = IDModule;
+        this.Module = Module;
     }
     
     // Ajouter à notre base de données
     public void Ajouter() {
-        DB.add(tableName, new String[] {
+        DB.add(this.tableName, 
+        new String[] {
             this.IDMatiere,
             this.NomMatiere,
+            this.description,
             this.VolumeHorraire,
             this.Coefficient,
-            this.description,
-            this.IDModule
+            this.Module.IDModule
         });
     }
     
@@ -39,17 +40,17 @@ public class Matiere {
         DB.update(this.tableName, newRow, new String[] {
             this.IDMatiere,
             this.NomMatiere,
+            this.description,
             this.VolumeHorraire,
             this.Coefficient,
-            this.description,
-            this.IDModule
+            this.Module.IDModule
         }); 
         this.IDMatiere= newRow[0];
         this.NomMatiere=newRow[1];
-        this.VolumeHorraire=newRow[2];
-        this.Coefficient=newRow[3];
-        this.description=newRow[4];
-        this.IDModule= newRow[5];
+        this.description=newRow[2];
+        this.VolumeHorraire=newRow[3];
+        this.Coefficient=newRow[4];
+        this.Module.IDModule= newRow[5];
        
     }
     

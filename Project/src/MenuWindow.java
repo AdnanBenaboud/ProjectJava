@@ -54,6 +54,11 @@ public class MenuWindow extends JFrame {
 	     
 	     JButton btnNewButton_3 = new JButton("Matières");
 	     btnNewButton_3.setBounds(484, 303, 165, 95);
+		 btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new MatieresWindow();
+			}
+		});
 	     
 	     btnNewButton_3.setPreferredSize(new Dimension(200,50));
 	     getContentPane().add(btnNewButton_3);
@@ -80,4 +85,3 @@ public class MenuWindow extends JFrame {
 		loginpage.setVisible(true);
 	}
 }
-
