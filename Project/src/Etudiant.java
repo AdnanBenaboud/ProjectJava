@@ -52,6 +52,7 @@ public class Etudiant {
 
 	}
 
+	// Supprimer de notre base de donnees
 	public void Supprimer() {
 		DB.delete(this.tableName, new String[] { "id_etudiant" },
 				new String[] { this.id });
