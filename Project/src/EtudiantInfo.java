@@ -1,10 +1,5 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.BorderLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -14,13 +9,10 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.util.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -30,6 +22,21 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.print.*;
+import java.io.File;
+import java.awt.image.BufferedImage;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
+
+import javax.swing.*;
+
+import javax.swing.border.TitledBorder;
+
+import javax.imageio.ImageIO;
+
+import java.io.File;
 
 public class EtudiantInfo {
 	JFrame g;
@@ -45,6 +52,8 @@ public class EtudiantInfo {
 	private JTable table;
 	private JLabel noteMoyenneLabel;
 	private JLabel noteMoyenne;
+
+	private JButton imprimer;
 
 	public EtudiantInfo(String id_filiere, String id_semestre, String id_etudiant) {
 
@@ -95,7 +104,7 @@ public class EtudiantInfo {
 
 		noteMoyenneLabel = new JLabel("Note moyenne: ");
 		noteMoyenneLabel.setFont(new Font("Yu Gothic Light", Font.PLAIN, 14));
-		noteMoyenneLabel.setBounds(579, 395, 97, 34);
+		noteMoyenneLabel.setBounds(583, 395, 97, 34);
 		g.getContentPane().add(noteMoyenneLabel);
 
 		// la table des notes
@@ -106,7 +115,7 @@ public class EtudiantInfo {
 		tableScrollPane.setLocation(10, 96);
 		tableScrollPane.setSize(563, 367);
 		g.getContentPane().add(tableScrollPane);
-
+		addImprimerBtn();
 		noteMoyenne = new JLabel("20");
 		noteMoyenne.setBackground(new Color(102, 205, 170));
 		noteMoyenne.setForeground(new Color(0, 0, 139));
@@ -117,10 +126,65 @@ public class EtudiantInfo {
 		afficherInformations();
 		g.setVisible(true);
 		g.setResizable(false);
+
 	}
 
 	public void showError(String message) {
 		JOptionPane.showMessageDialog(g, message, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void addImprimerBtn() {
+		imprimer = new JButton("imprimer");
+		imprimer.setBounds(580, 350, 100, 34);
+		imprimer.setFont(new Font("Gabriola", Font.PLAIN, 20));
+		imprimer.setVerticalAlignment(SwingConstants.TOP);
+		imprimer.addActionListener(this::takeScreenshot);
+		g.getContentPane().add(imprimer);
+	}
+
+	public void takeScreenshot(ActionEvent e) {
+
+		g.getContentPane().remove(imprimer);
+		BufferedImage img = getScreenShot(
+				g.getContentPane());
+
+		JOptionPane.showMessageDialog(
+				null,
+				new JLabel(
+						new ImageIcon(
+								img.getScaledInstance(
+										img.getWidth(null) / 2,
+										img.getHeight(null) / 2,
+										Image.SCALE_SMOOTH))));
+		try {
+			// write the image as a PNG
+			ImageIO.write(
+					img,
+					"png",
+					new File(String.format("notes/%s-%s-%s-%s.png",
+							DB.getOneColumnWithConditions("etudiant", "nom_etudiant", new String[] { "id_etudiant" },
+									new String[] { id_etudiant })[0],
+							DB.getOneColumnWithConditions("etudiant", "prenom_etudiant", new String[] { "id_etudiant" },
+									new String[] { id_etudiant })[0],
+							id_filiere, id_semestre)));
+			addImprimerBtn();
+		} catch (Exception error) {
+			error.printStackTrace();
+			addImprimerBtn();
+		}
+	}
+
+	public static BufferedImage getScreenShot(
+			Component component) {
+
+		BufferedImage image = new BufferedImage(
+				component.getWidth(),
+				component.getHeight(),
+				BufferedImage.TYPE_INT_RGB);
+		// call the Component's paint method, using
+		// the Graphics object of the image.
+		component.paint(image.getGraphics()); // alternately use .printAll(..)
+		return image;
 	}
 
 	public void afficherInformations() {
